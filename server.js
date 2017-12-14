@@ -4,6 +4,19 @@ var express = require("express")
 var app = express()
 var port = process.env.PORT || 8080
 
+
+var IOTA = require('iota.lib.js');
+
+
+var iotajs = new IOTA({
+  'host': 'http://iota.bitfinex.com:80',
+  'port': 80
+});
+
+
+
+
+
 app.use(express.static(__dirname + "/"))
 
 var server = http.createServer(app)
@@ -25,6 +38,10 @@ wss.myBroadcast = function(data) {
     
      this.clients[i].send(data);
      console.log('sent to client[' + i + '] ' + data);
+     if (data == 'wow'){
+        console.log("Version " + iotajs.version)
+             this.clients[i].send("Version " + iotajs.version);
+     }
   }
 };
 

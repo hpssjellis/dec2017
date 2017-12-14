@@ -18,109 +18,6 @@ https://www.youtube.com/watch?v=zRZJHMFL0p4
 
 
 
-
-May 15, 2017
-I have been looking into several ways to make the webpage more secure, but each method adds bulk and confusion to the simple process. I think perhaps the best method is to limit the number of chat connections to 2 if a photon and webserver or 3 if two photons etc. That way other people will not be able to snoop on your connections and if they are snooping then you can't connect
-
----------------------------------------------
-
-Note: This is for very fast communication with the Particle.io Photon and only sends one BYTE at a time in Ascii format A B C D ... or a b c d ... and other ascii characters. This should give 255 seperate commands to control your device.
-
-Note every 12 seconds it sends the command "C" which checks if the connection is still alive and dims the main LED 
-
-updated May 3rd, 2017
-
-typically about 7 ms delay. should be very good for fast communication with the Photon
-
-On a private server remember to give people access to your application. On a public server that is not an issue
-
-Just got send working so now the photon can receive Ascii instructions and send ascii instruction (255 commands)
-
-OK security activating the photon. Security needs to improve with the website after connection is achieved.
-
-Use at your own risk.
-
-
-
-update Mar 28, 2017
-
-Briefly it was not working, seems to be working now.
-
-
-Load socket.ino onto the photon (wait 25 s for D7 to go out)
-
-can use putty to monitor the serial connection.
-
-run server.js using node js. (auto installation by running npm install)
-
-using your node js server open index.html, enter ID and access code then click connect (uses the cloud to connect the websocket)
-
-Then try the websocket commands can use any single character (case sensitive so should have 255 possible commands)
-click the A button to light D7, the B button to turn off D7
-
-Regualr cloud commands average at about 1200 ms these commands average about 10 ms.
-
-
-
-If the above  works try the carsocket.ino and car-control.html pages for controlling a toy car.
-
-
-.
-
-
-
-.
-
-
-
-
-.
-
-
-
-
-.
-
-
-
-
-
-.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Originally a tiny demo using the [einaros/ws](http://einaros.github.io/ws/) WebSockets implementation.
-
-I have changed this demo to work with the Spark Core. Flash the .ino file onto your spark core and then load this github site onto a cloud9 server. The web page buttons should activate the D7 LED on the spark core.
-
-Note: the "connect" function will have to be activated to get the Particle.io Photon (formerly Spark.io Core) ready to recieive websocket style information.
-
-Updated Oct4, 2015.
-My bad, I should have given a method to activatet the connect function. I have added a new webpage called activation.html, which needs your core ID and access Token and then click the button "connect" before the Photon can talk to your nodeJs server.
-
 #running on Cloud9 http://c9.io
 make a login
 Create A new NODEJS workspace
@@ -135,10 +32,7 @@ run
 
 main menu --> preview --> preview running app
 
-This will load the connection page but you will have to first load activation.html
-
-
-Note. Users will have to run activation.html to enter their photon ID and access code before any of this will work. Then you can click the connect button to load the main index.html page that communicates with the photon
+This will load the connection page 
 
 .
 
@@ -154,32 +48,7 @@ Note. Users will have to run activation.html to enter their photon ID and access
 
 .
 
-.
 
-From the original Github heroku-examples/node-ws-test
-
-# Running Locally
-
-``` bash
-npm install
-npm start
-```
-
-
-
-
-# Running on Heroku
-
-``` bash
-heroku create
-git push heroku master
-heroku open
-```
-
-
-
-
-To see a full discussion of this process check out the forum at https://community.particle.io/t/tcp-server-and-client-example-socket-programs-d7-on-please/11307
 
 Note: Use at your own risk.
 

@@ -1,0 +1,66 @@
+asdfasd<br>
+
+
+<script src="node_modules/iota.lib.js/dist/iota.js"></script>
+
+<script>
+
+
+
+var iotajs = new IOTA({
+  'host': 'http://iota.bitfinex.com:80',
+  'port': 80
+});
+
+
+
+seed = 'ABCDEF9'
+address = ''
+
+
+console.log("Version " + iotajs.version)
+
+
+   //
+    //  Generate address function
+    //  Automatically updates the HTML on the site
+    //
+    function genAddress() {
+
+        console.log("Generating an address");
+  // address = iotajs.api.getNewAddress(seed, { 'total': 1},
+    
+        // Deterministically Generates a new address with checksum for the specified seed
+       iotajs.api.getNewAddress(seed, { 'total': 1},  function(e,address) {
+      
+             if (!e) {
+
+                console.log("NEW ADDRESS GENERATED: ", address)
+
+                address = address;
+
+            }
+        })
+        
+        
+        
+        
+        
+    }
+
+
+           
+</script>
+
+
+
+
+<input type=button value="Check Version" onclick="{
+  document.getElementById('myWow').innerHTML = 'Version ' + iotajs.version + '<br>'
+genAddress()
+
+  
+  
+}"><br>
+
+<div id="myWow">...</div>

@@ -5,14 +5,14 @@
 
 <script>
 
-   var iotajs = new IOTA({
+   var myIota = new IOTA({
      'host': 'http://iota.bitfinex.com:80',
      'port': 80
    });
 
 
-   mySeed = 'ABCDEF9'
-   myAddress = ''
+   var mySeed = 'ABCDEF9'
+   var myAddress = ''
 
 
    //  Generate address function
@@ -21,7 +21,7 @@
    function genAddress() {
 
         // Deterministically Generates a new address with checksum for the specified seed
-        iotajs.api.getNewAddress(mySeed, { 'total': 1},  function(e, address) {
+        myIota.api.getNewAddress(mySeed, { 'total': 1},  function(e, address) {
              if (!e) {
                 myAddress = address;
                  document.getElementById('myVerButton').value = 'Convert Seed'
@@ -41,7 +41,7 @@
 
 
 <input  type=button value="Check Version" onclick="{
-  document.getElementById('myDiv01').innerHTML += 'Version ' + iotajs.version + '<br>'
+  document.getElementById('myDiv01').innerHTML += 'Version ' + myIota.version + '<br>'
 
 }"><br>
 
@@ -57,7 +57,7 @@
 <input id="myVerButton" type=button value="Convert Seed" onclick="{
   document.getElementById('myVerButton').value = 'Wait for a bit...'
   mySeed = document.getElementById('mySeedIn').value
-  setTimeout('genAddress()', 10)
+  setTimeout('genAddress()', 10)   // give the webpage 10 ms to update
 
 }"><br>
 

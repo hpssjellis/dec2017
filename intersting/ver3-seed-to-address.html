@@ -1,0 +1,67 @@
+
+
+
+<script src="node_modules/iota.lib.js/dist/iota.js"></script>
+
+<script>
+
+   var iotajs = new IOTA({
+     'host': 'http://iota.bitfinex.com:80',
+     'port': 80
+   });
+
+
+   mySeed = 'ABCDEF9'
+   myAddress = ''
+
+
+   //  Generate address function
+   //  Automatically updates the HTML on the site
+   //
+   function genAddress() {
+
+        // Deterministically Generates a new address with checksum for the specified seed
+        iotajs.api.getNewAddress(mySeed, { 'total': 1},  function(e, address) {
+             if (!e) {
+                myAddress = address;
+                 document.getElementById('myVerButton').value = 'Convert Seed'
+                 document.getElementById('myDiv02').innerHTML += 'Address from seed  = ' + myAddress + '<br>'
+
+            } else {
+                      document.getElementById('myDiv02').innerHTML += 'Error invalid seed ' + e + '<br>'
+
+            }
+        })  
+       
+    }
+
+</script>
+
+
+
+
+<input  type=button value="Check Version" onclick="{
+  document.getElementById('myDiv01').innerHTML += 'Version ' + iotajs.version + '<br>'
+
+}"><br>
+
+<div id="myDiv01"></div><br>
+
+<input  id="mySeedIn" type=text value="ABCDEF9" size=100><br>
+
+<input type=button value="Hide Seed" onclick="{
+    document.getElementById('mySeedIn').type = 'password'
+    
+}">
+
+<input id="myVerButton" type=button value="Convert Seed" onclick="{
+  document.getElementById('myVerButton').value = 'Wait for a bit...'
+  mySeed = document.getElementById('mySeedIn').value
+  setTimeout('genAddress()', 10)
+
+}"><br>
+
+<div id="myDiv02"></div>
+
+
+

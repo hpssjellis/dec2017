@@ -47,7 +47,8 @@ function getBalance(addresses) {
 }
 
 
-
+//note maybe. seems deprecated
+//inputs Array - list of inputs objects consisting of address, balances and keyIndex
 
 
 

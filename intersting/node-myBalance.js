@@ -3,10 +3,10 @@ var IOTA = require('iota.lib.js');
 
   var myUri      = 'http://iota.bitfinex.com';
   var myPort     = 80;
-  var mySeed     = 'ABCDEF9';  //["SEEDONE", "SEEDTWO"]
+  var mySeed     = 'ABCDEFG9';  //["SEEDONE", "SEEDTWO"]
   // var nAddr   = 2
   var myAddress  = '';
-  var myAmount   = []; 
+ // var myAmount   = []; 
 
 
 
@@ -24,7 +24,9 @@ function myBalance() {
           console.log(" Error 1 is " + e);
         }
         else {
-          getBalance(myAddress)
+          
+          console.log(  "The address " + myAddress);
+          //getBalanceWorks(myAddress);
             // myIota.api.getBalances(myAddress, 100, function(e2, myAmount) {
             //    if (e2){ console.log(" Error 2 is " + e); } else
             //    {     console.log(" Amount is " + myAmount);}
@@ -38,8 +40,8 @@ function myBalance() {
 
 
 //Takes a list of addresses as argument and should get the balance for each address
-function getBalance(addresses) {
-  myIota.api.getBalances(addresses, 1, function(error, inputs) {
+function getBalanceWorks(addresses) {
+  myIota.api.getBalances(addresses,  function(error, inputs) {
       if (error){console.log(" Error balances is " + error);} else 
           console.log(  "The input " + inputs.balances);
           console.log(  "The address " + addresses);
@@ -47,8 +49,25 @@ function getBalance(addresses) {
 }
 
 
-//note maybe. seems deprecated
-//inputs Array - list of inputs objects consisting of address, balances and keyIndex
+function getBalance() {
+  myIota.api.getInputs(mySeed,  {'start':0, 'end':1, 'threshold' : 0}, function(error, myInputs) {
+    
+//{'start':0, 'end':0, 'threshold' : 0},
+        console.log(myInputs);
+        console.log("The inputs see above:");
+
+        console.log(myInputs.inputs);
+        console.log(myInputs.totalBalance);
+        console.log(" Error is " + error); 
+        //  console.log(  "The input " + inputs.inputs.address);
+        //  console.log(  "The input " + inputs.inputs.balance);
+        //  console.log(  "The input " + inputs.inputs.keyIndex);
+      
+    });
+}
+
+
+
 
 
 
@@ -56,3 +75,4 @@ function getBalance(addresses) {
 
 
 myBalance();
+getBalance()

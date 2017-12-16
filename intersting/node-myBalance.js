@@ -50,9 +50,17 @@ function getBalanceWorks(addresses) {
 
 
 function getBalance() {
-  myIota.api.getInputs(mySeed,  {'start':0, 'end':1, 'threshold' : 0}, function(error, myInputs) {
+  myIota.api.getInputs(mySeed, {'start':0, 'end':1, 'threshold' : 0},  function(error, myInputs) {
     
-//{'start':0, 'end':0, 'threshold' : 0},
+// {'start':0, 'end':1, 'threshold' : 0},   // best and fast
+// {'start':0, 'end':1},     worked
+// {'start':0},        really slow
+// myIota.api.getInputs(mySeed, {},  function(error, myInputs) {  // slow
+// myIota.api.getInputs(mySeed,   function(error, myInputs) {  // slow also worked
+ 
+ 
+ 
+        if (error){console.log(error);} else {
         console.log(myInputs);
         console.log("The inputs see above:");
 
@@ -62,7 +70,7 @@ function getBalance() {
         //  console.log(  "The input " + inputs.inputs.address);
         //  console.log(  "The input " + inputs.inputs.balance);
         //  console.log(  "The input " + inputs.inputs.keyIndex);
-      
+        }
     });
 }
 

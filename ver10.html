@@ -68,6 +68,7 @@
   
   
   // convert the message back to readable JSON
+  // not working
  var theMessage = myIota.utils.transactionObject(accountData.transfers[accountData.transfers.length-1][0].signatureMessageFragment) 
   
   
@@ -80,6 +81,7 @@ document.getElementById('myDiv03').innerHTML += 'accountData.balance ='         
 
 document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].hash =' + accountData.transfers[accountData.transfers.length-1][0].hash + '<br>'
 document.getElementById('myDiv03').innerHTML += 'The Message =' + theMessage + '<br><br>Converted from <br>'+ accountData.transfers[accountData.transfers.length-1][0].signatureMessageFragment + '<br><br>'
+
 document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].value =' + accountData.transfers[accountData.transfers.length-1][0].value + '<br>'
 document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].tag =' + accountData.transfers[accountData.transfers.length-1][0].tag + '<br>'
 
@@ -89,7 +91,7 @@ document.getElementById('myDiv03').innerHTML += 'accountData.addresses[accountDa
 
 // Change how the button looks
 document.getElementById('myAccountButton').value = 'getAccountInfo()'
-document.getElementById('myAccountButton').style.backgroundColor  = 'red'
+document.getElementById('myAccountButton').style.backgroundColor  = 'green'
 
 
 

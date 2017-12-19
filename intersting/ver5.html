@@ -1,0 +1,291 @@
+
+
+
+<script src="node_modules/iota.lib.js/dist/iota.js"></script>
+
+<script>
+
+ //  var myIota = new IOTA({
+ //    'host': 'http://iota.bitfinex.com:80',
+ //    'port': 80
+ //  });
+
+    var myIota = new IOTA({
+        'host': 'https://iota.thathost.net',
+        'port': 443
+    });
+
+//        'host': 'https://iota.thathost.net',
+//        'port': 443
+//         http://iota.thathost.net/   check uptime status at this URL
+
+
+   var mySeed = 'MISSSION9IOTA9JEREMY'
+   var myAddress = ''
+   var myBalance = 0
+
+
+
+
+function getBalance() {
+  myIota.api.getInputs(mySeed, {'start':0, 'end':1, 'threshold' : 0},  function(error, myInputs) {
+    
+// {'start':0, 'end':1, 'threshold' : 0},   // best and fast
+// {'start':0, 'end':1},     worked
+// {'start':0},        really slow
+// myIota.api.getInputs(mySeed, {},  function(error, myInputs) {  // slow
+// myIota.api.getInputs(mySeed,   function(error, myInputs) {  // slow also worked
+ 
+ 
+ 
+        if (error){ console.log(" Error is " + error); } else {
+        console.log(myInputs);
+        console.log("The inputs see above:");
+
+        console.log(myInputs.inputs);
+        console.log(myInputs.totalBalance);
+
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+/*
+
+//Takes a list of addresses as argument and should get the balance for each address
+function getBalance(addresses) {
+  myIota.api.getBalances(addresses, 100, function(error, inputs) {
+    var i = 0; 
+    var totalValue = 0; 
+    if(inputs != null && inputs.balances != null) {
+      inputs.balances.forEach(function(balance) {
+        totalValue += parseInt(balance); 
+        if (parseInt(balance) > 0) {
+          console.log(i+1 + " The address " + addresses[i] + " has a balance of: " + parseInt(balance));
+          console.log("Balance detected!!!");
+        } else {
+          console.log(i+1 + " The address " + addresses[i] + " has a balance of: " + parseInt(balance));
+        };
+        i++
+      })
+    } else {
+      console.log(error);
+    }
+    console.log("All addresses of this seeds contain " + totalValue + " tokens!")
+
+  });
+};
+
+
+*/
+
+
+
+
+
+
+   //  Generate address function
+   //  Automatically updates the HTML on the site
+   //
+   function genAddress() {
+
+        // Deterministically Generates a new address with checksum for the specified seed
+        myIota.api.getNewAddress(mySeed, {'checksum': true}, function(e, address) {
+    //    myIota.api.getNewAddress(mySeed, { 'total': 1},  function(e, address) {
+             if (!e) {
+                myAddress = address;
+                 document.getElementById('myVerButton').value = 'Convert Seed'
+                 document.getElementById('myDiv02').innerHTML += 'Address from seed  = ' + myAddress + '<br>'
+
+            } else {
+                      document.getElementById('myDiv02').innerHTML += 'Error invalid seed ' + e + '<br>'
+
+            }
+        })  
+       
+    }
+
+
+
+
+
+
+
+
+
+/*
+
+    // Gets the addresses and transactions of an account
+    // As well as the current balance
+    
+    function getAccountInfo() {
+        // Command to be sent to the IOTA API
+        // Gets the latest transfers for the specified seed
+    
+    /*
+        myIota.api.getAccountData(mySeed, function(e, accountData) {
+            console.log("Account data", accountData);
+            // Update address
+            if (!myAddress && accountData.addresses[0]) {
+                myAddress = myIota.utils.addChecksum(accountData.addresses[accountData.addresses.length - 1]);
+
+            }
+
+            myBalance = accountData.balance;
+            console.log("Balance = ", myBalance);
+        })
+    
+
+
+
+
+        myIota.api.getAccountData(mySeed, function(e, accountData){
+            if (e) {
+                console.log('Can\'t get balance for seed ', e);
+            } else {
+                console.log('Balance for seed is: \n', accountData);
+            }
+        });
+
+     }
+
+
+
+
+
+
+
+
+
+    function sendTransfer(address, value, messageTrytes) {
+
+        var transfer = [{
+            'address': address,
+            'value': parseInt(value),
+            'message': messageTrytes
+        }]
+
+        console.log("Sending Transfer", transfer);
+
+        // We send the transfer from this seed, with depth 4 and minWeightMagnitude 18
+        iota.api.sendTransfer(seed, 4, 9, transfer, function(e) {
+
+            if (e){
+
+                var html = '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>ERROR!</strong>' + e + '.</div>'
+                $("#send__success").html(JSON.stringify());
+
+                $("#submit").toggleClass("disabled");
+
+                $("#send__waiting").css("display", "none");
+
+            } else {
+
+                var html = '<div class="alert alert-info alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Success!</strong> You have successfully sent your transaction. If you want to make another one make sure that this transaction is confirmed first (check in your client).</div>'
+                $("#send__success").html(html);
+
+                $("#submit").toggleClass("disabled");
+
+                $("#send__waiting").css("display", "none");
+
+                balance = balance - value;
+                updateBalanceHTML(balance);
+            }
+        })
+    }
+
+
+
+
+
+
+        // the message which we will send with the transaction
+        var messageToSend = {
+            'name': name,
+            'message': message
+        }
+
+        // Convert the user message into trytes
+        // In case the user supplied non-ASCII characters we throw an error
+        try {
+            console.log("Sending Message: ", messageToSend);
+            var messageTrytes = iota.utils.toTrytes(JSON.stringify(messageToSend));
+            console.log("Converted Message into trytes: ", messageTrytes);
+            // We display the loading screen
+            $("#send__waiting").css("display", "block");
+            $("#submit").toggleClass("disabled");
+            // If there was any previous error message, we remove it
+            $("#send__success").html();
+
+            // call send transfer
+            sendTransfer(address, value, messageTrytes);
+
+        } catch (e) {
+
+            console.log(e);
+            var html = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Wrong Format!</strong> Your message contains an illegal character. Make sure you only enter valid ASCII characters.</div>'
+            $("#send__success").html(html);
+
+        }
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+<input  type=button value="Check Version" onclick="{
+  document.getElementById('myDiv01').innerHTML += 'Version ' + myIota.version + '<br>'
+
+}"><br>
+
+<div id="myDiv01"></div><br>
+
+<input  id="mySeedIn" type=text value="ABCDEF9" size=100><br>
+
+<input type=button value="Hide Seed" onclick="{
+    document.getElementById('mySeedIn').type = 'password'
+    
+}">
+
+<input id="myVerButton" type=button value="Convert Seed" onclick="{
+  document.getElementById('myVerButton').value = 'Wait for a bit...'
+  mySeed = document.getElementById('mySeedIn').value
+  setTimeout('genAddress()', 10)   // give the webpage 10 ms to update
+
+}"><br>
+
+<div id="myDiv02"></div>
+
+
+<input id="myAccountButton" type=button value="Get balance" onclick="{
+  document.getElementById('myAccountButton').value = 'Wait for a bit...'
+  mySeed = document.getElementById('mySeedIn').value
+  setTimeout('getBalance()', 10)   // give the webpage 10 ms to update
+
+}"><br>
+
+<div id="myDiv03"></div>
+

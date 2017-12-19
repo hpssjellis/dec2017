@@ -1,20 +1,33 @@
+// API at
+//  http://dev.iota.org/javascript-library/
+
+
+
 var IOTA = require('iota.lib.js');
 
     //
     //  Instantiate IOTA
     //
     var myIota = new IOTA({
-        'host': 'http://iota.bitfinex.com:80',
-        'port': 80
+        'host': 'http://node.iotawallet.info',
+        'port': 14265
     });
 
-    var mySeed = 'ABCDEEF9';
+// 'host': 'http://iota.bitfinex.com:80',
+//     'port': 80
+
+// 'host': 'http://node.iotawallet.info',
+// 'port': 14265
+
+
+
+    var mySeed = 'ABCD'; // you put your seed in but delete befopre saving this file
     var myAddress;    // generated
-    var toAddress =  'GTUWYHPNMK9DEINTZPYM9PNEWLUDQBBPGQJWCPPJCRSZX9OLXJ9UVXEBAHIZSPSEHQOIYNCEOAY9HQOKZJ9ACTMZED'; 
+    var toAddress =  'ABCDEF';    // This is the receiver address
     var myBalance = 0;
   //  var address;
-    var name = 'Fred'
-    var message = 'Wow I like this'
+    var name = 'FromOther'
+    var message = 'This could be really good'
     var value = 0
 
    
@@ -35,7 +48,37 @@ var IOTA = require('iota.lib.js');
         // Gets the latest transfers for the specified seed
         myIota.api.getAccountData(mySeed, function(e, accountData) {
 
-            console.log("Account data", accountData);
+            console.log("Account data (see below)");
+            console.log(accountData);
+            console.log("GetAccountData error check "+e);
+            console.log("");
+            console.log("");
+            console.log("accountData.transfers.length below");
+            console.log(accountData.transfers.length);
+            
+            console.log("");
+            
+           
+            console.log("accountData.addresses.length below"); 
+            console.log(accountData.addresses.length);
+            
+            console.log("accountData.inputs.length below");
+            console.log(accountData.inputs.length);
+            
+            
+            console.log("Checking transfers (see below)");
+            console.log(accountData.transfers[1]);
+            console.log("1 above");
+
+           // console.log(accountData.transfers.hash);
+          //  console.log(accountData.transfers.signatureMessageFragment);
+            console.log("");
+           // console.log(accountData.transfers.tag);
+            console.log("");
+          //  console.log(accountData.transfers.value);
+            console.log("");
+          //  console.log(accountData.transfers.address);
+            console.log("");
 
             // Update address
          
@@ -107,7 +150,7 @@ var IOTA = require('iota.lib.js');
         console.log("Sending Transfer", transfer);
 
         // We send the transfer from this seed, with depth 4 and minWeightMagnitude 18
-        myIota.api.sendTransfer(mySeed, 4, 18, transfer, function(e) {
+        myIota.api.sendTransfer(mySeed, 4, 14, transfer, {}, function(e) {
 
             if (e){
                 
@@ -116,6 +159,9 @@ var IOTA = require('iota.lib.js');
 
             } else {
 
+                    console.log("I think your message was sent");
+                    console.log("Need to login as the receive address seed");
+                    console.log("In order to see it.");
             
                // myBalance = myBalance - value;
                 
@@ -129,8 +175,8 @@ var IOTA = require('iota.lib.js');
 
 
 
-        console.log("genAddress() started");
-        genAddress()
+      //  console.log("genAddress() started");
+      //  genAddress()
         console.log("");
         console.log("getAccountInfo() started");
         getAccountInfo();

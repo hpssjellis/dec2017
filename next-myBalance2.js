@@ -14,16 +14,18 @@ var IOTA = require('iota.lib.js');
     });
 
 // 'host': 'http://iota.bitfinex.com:80',
-//     'port': 80
-
 // 'host': 'http://node.iotawallet.info',
-// 'port': 14265
+ 
+
+//     'port': 80
+//     'port': 14265
 
 
 
-    var mySeed = 'ABCD'; // you put your seed in but delete befopre saving this file
+    var mySeed = 'ABCEDF9'; // you put your seed in but delete befopre saving this file
     var myAddress;    // generated
-    var toAddress =  'ABCDEF';    // This is the receiver address
+    var toAddress =  'KJKWWYKFVLMKQHJUDEIAVJTCMRII9YZHMNWRPBZDOSGQFEJZIQ99WKVYMAQNSESPXLAUZGAYYBWPUYTNYTGCKYUCZ9';    // This is JJJJJ
+ //   var toAddress =  'WOYUAHICYLMHFWOBCHLBFN9YPHDW9S9UQVPINDFLDCSRSEJTM9IZBZEMKEZMME9YXOANFXXSECDXKHSZXVVRHWG9HW';    // This is RRRRRR
     var myBalance = 0;
   //  var address;
     var name = 'FromOther'
@@ -51,34 +53,6 @@ var IOTA = require('iota.lib.js');
             console.log("Account data (see below)");
             console.log(accountData);
             console.log("GetAccountData error check "+e);
-            console.log("");
-            console.log("");
-            console.log("accountData.transfers.length below");
-            console.log(accountData.transfers.length);
-            
-            console.log("");
-            
-           
-            console.log("accountData.addresses.length below"); 
-            console.log(accountData.addresses.length);
-            
-            console.log("accountData.inputs.length below");
-            console.log(accountData.inputs.length);
-            
-            
-            console.log("Checking transfers (see below)");
-            console.log(accountData.transfers[1]);
-            console.log("1 above");
-
-           // console.log(accountData.transfers.hash);
-          //  console.log(accountData.transfers.signatureMessageFragment);
-            console.log("");
-           // console.log(accountData.transfers.tag);
-            console.log("");
-          //  console.log(accountData.transfers.value);
-            console.log("");
-          //  console.log(accountData.transfers.address);
-            console.log("");
 
             // Update address
          

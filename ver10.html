@@ -10,7 +10,7 @@
 
 
     var myIota = new IOTA({
-       'host': 'https://iota.thathost.net',
+        'host': 'https://iota.thathost.net',
         'port': 443
     });
 
@@ -53,6 +53,8 @@
     //  Automatically updates the HTML on the site
     //
     function getAccountInfo() {
+        
+       // console.log(myIota.utils.fromTrytes('ODGABDPCADTCGADBGAPBFDCDADYBHDWCTCFDGAQAGAADTCGDGDPCVCTCGADBGACCWCXCGDEARCCDID9DSCEAQCTCEAFDTCPC9D9DMDEAVCCDCDSCGAQD'));
 
         // Command to be sent to the IOTA API
         // Gets the latest transfers for the specified seed
@@ -68,25 +70,35 @@
   
   
   // convert the message back to readable JSON
-  // not working
- var theMessage = myIota.utils.transactionObject(accountData.transfers[accountData.transfers.length-1][0].signatureMessageFragment) 
+
+  var theTryte = accountData.transfers[accountData.transfers.length-1][0].signatureMessageFragment
+  while (theTryte.charAt( theTryte.length-1 ) == '9'){
+     theTryte = theTryte.slice(0, -1)       
+  }
+ var theMessage = myIota.utils.fromTrytes(theTryte)
+ var wow = JSON.parse(theMessage);
   
-  
+  var theTag = accountData.transfers[accountData.transfers.length-1][0].tag
+  while (theTag.charAt( theTag.length-1 ) == '9'){
+     theTag = theTag.slice(0, -1)       
+  }
   
 document.getElementById('myDiv03').innerHTML = 'Printing getAccountData() balance, tranasfers, addresses<br>'     
-document.getElementById('myDiv03').innerHTML += 'accountData.transfers.length =' + accountData.transfers.length + '<br>'
-document.getElementById('myDiv03').innerHTML += 'accountData.addresses.length =' + accountData.addresses.length + '<br>'
-document.getElementById('myDiv03').innerHTML += 'accountData.latestAddress ='    + accountData.latestAddress + '<br>'
-document.getElementById('myDiv03').innerHTML += 'accountData.balance ='          + accountData.balance + '<br><hr>'
+document.getElementById('myDiv03').innerHTML += 'accountData.transfers.length = ' + accountData.transfers.length + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.addresses.length = ' + accountData.addresses.length + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.latestAddress The latest Unused address= '    + accountData.latestAddress + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.balance = '          + accountData.balance + '<br><hr>'
 
 document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].hash =' + accountData.transfers[accountData.transfers.length-1][0].hash + '<br>'
-document.getElementById('myDiv03').innerHTML += 'The Message =' + theMessage + '<br><br>Converted from <br>'+ accountData.transfers[accountData.transfers.length-1][0].signatureMessageFragment + '<br><br>'
+document.getElementById('myDiv03').innerHTML += 'The Message = ' + theMessage + '<br><br>'
+document.getElementById('myDiv03').innerHTML += 'name = ' + wow.name+'<br>';
+document.getElementById('myDiv03').innerHTML += 'message = ' + wow.message+'<hr>';
 
-document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].value =' + accountData.transfers[accountData.transfers.length-1][0].value + '<br>'
-document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].tag =' + accountData.transfers[accountData.transfers.length-1][0].tag + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].value = ' + accountData.transfers[accountData.transfers.length-1][0].value + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].tag = ' + theTag + '<br>'
 
-document.getElementById('myDiv03').innerHTML += 'accountData.balance =' + accountData.balance + '<br>'
-document.getElementById('myDiv03').innerHTML += 'accountData.addresses[accountData.addresses.length-1] =' + accountData.addresses[accountData.addresses.length-1] + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.balance = ' + accountData.balance + '<br>'
+document.getElementById('myDiv03').innerHTML += 'The Used addresses  accountData.addresses[accountData.addresses.length-1] = ' + accountData.addresses[accountData.addresses.length-1] + '<br>'
 
 
 // Change how the button looks
@@ -172,14 +184,20 @@ hash:    signatureMessageFragment:    address:     value:    obsoleteTag:  times
 
             if (e){
                 
-                    console.log("error" + e);
+                    
+                    document.getElementById('myDiv02').innerHTML += 'Error : '+ e + '<br>'
 
 
             } else {
 
-                    console.log("I think your message was sent");
-                    console.log("Need to login as the receive address seed");
-                    console.log("In order to see it.");
+                    //console.log("I think your message was sent");
+                    //console.log("Need to login as the receive address seed");
+                    //console.log("In order to see it.");
+                    document.getElementById('myDiv02').innerHTML += 'Transfer completed <br>'
+                    // Change how the button looks
+                    document.getElementById('myVerButton').value = 'Transfer'
+                    document.getElementById('myVerButton').style.backgroundColor  = 'green'
+
             
                // myBalance = myBalance - value;
                 
@@ -195,11 +213,13 @@ function runAll(){
 
       //  console.log("genAddress() started");
       //  genAddress()
-        console.log("");
-        console.log("getAccountInfo() started");
+       // console.log("");
+      //  console.log("getAccountInfo() started");
        // getAccountInfo();
-        console.log("");
-        console.log("mySendTransfer() started");
+      //  console.log("");
+      //  console.log("mySendTransfer() started");
+        
+       document.getElementById('myDiv02').innerHTML = 'mySendTransfer() started.... <br>'
 
         var messageToSend = {
             'name': name,
@@ -207,9 +227,11 @@ function runAll(){
         }
 
         try {
-            console.log("Sending Message: ", messageToSend);
+           // console.log("Sending Message: ", messageToSend);
+            document.getElementById('myDiv02').innerHTML += 'Sending name : '+ messageToSend.name +' <br>'
+            document.getElementById('myDiv02').innerHTML += 'Sending message : '+ messageToSend.message +' <br>'
             var messageTrytes = myIota.utils.toTrytes(JSON.stringify(messageToSend));
-            console.log("Converted Message into trytes: ", messageTrytes);
+            //console.log("Converted Message into trytes: ", messageTrytes);
 
             mySendTransfer(toAddress, value, messageTrytes);
 
@@ -252,6 +274,7 @@ function runAll(){
 
 <input id="myVerButton" type=button value="Transfer" onclick="{
   document.getElementById('myVerButton').value = 'Wait for a bit...'
+  document.getElementById('myVerButton').style.backgroundColor  = 'red'
   mySeed = document.getElementById('mySeedIn').value
   if (mySeed == ''){
       alert('Enter a seed')

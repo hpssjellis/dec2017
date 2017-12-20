@@ -160,7 +160,7 @@ var IOTA = require('iota.lib.js');
 
 
 
-
+int myWow = 0;
 
 
 
@@ -172,9 +172,10 @@ button.watch(function (err, value) {
  // led.writeSync(value);
  
  if (value == 1){
-
-   
-   
+    led.writeSync(1); 
+    myWow += 1;
+    if (myWow > 10){
+       myWow = 0;
    
    
   
@@ -214,7 +215,7 @@ button.watch(function (err, value) {
    
    
    
-   
+ } 
    
  } else { 
     led.writeSync(0); 

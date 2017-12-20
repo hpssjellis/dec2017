@@ -1,0 +1,364 @@
+
+
+<script src="node_modules/iota.lib.js/dist/iota.js"></script>
+
+<script>
+
+
+// API at
+//  http://dev.iota.org/javascript-library/
+
+
+    var myIota = new IOTA({
+        'host': 'https://iota.thathost.net',
+        'port': 443
+    });
+
+//        'host': 'http://node.lukaseder.de',
+//        'port': 14265
+//         https://iota.lukaseder.de/  check uptime status at this URL
+
+
+//        'host': 'https://iota.thathost.net',
+//        'port': 443
+//         https://iota.thathost.net/   check uptime status at this URL
+
+
+//        'host': 'http://node.iotawallet.info',
+//        'port': 14265
+
+
+//        'host': 'http://node01.iotatoken.nl',
+//        'port': 14265
+
+
+
+//        This one does not seem to work
+//        'host': 'http://iota.bitfinex.com:80',
+//        'port': 80
+
+
+    var mySeed = ''; // NEVER HARD CODE YOUR SEED ONTO A WEB PAGE!
+    var myAddress;    // generated
+    var toAddress =  'KJKWWYKFVLMKQHJUDEIAVJTCMRII9YZHMNWRPBZDOSGQFEJZIQ99WKVYMAQNSESPXLAUZGAYYBWPUYTNYTGCKYUCZ9';    // This is JJJJJ
+ // var toAddress =  'WOYUAHICYLMHFWOBCHLBFN9YPHDW9S9UQVPINDFLDCSRSEJTM9IZBZEMKEZMME9YXOANFXXSECDXKHSZXVVRHWG9HW';    // This is RRRRRR
+    var myBalance = 0;
+    var myName = 'Tomas'
+    var myMessage = 'Great to send messages using IOTA'
+    var myValue = 0
+
+
+    // Gets the addresses and transactions of an account
+    // As well as the current balance
+    //  Automatically updates the HTML on the site
+    //
+    function getAccountInfo() {
+        
+       // console.log(myIota.utils.fromTrytes('ODGABDPCADTCGADBGAPBFDCDADYBHDWCTCFDGAQAGAADTCGDGDPCVCTCGADBGACCWCXCGDEARCCDID9DSCEAQCTCEAFDTCPC9D9DMDEAVCCDCDSCGAQD'));
+
+        // Command to be sent to the IOTA API
+        // Gets the latest transfers for the specified seed
+        myIota.api.getAccountData(mySeed, function(e, accountData) {
+
+        //    console.log("Account data transfers length (see below)");
+       //     console.log(accountData.transfers.length);
+       //     console.log("Account data transfers (see below)");
+       //     console.log(accountData.transfers[accountData.transfers.length-1]);
+       //     console.log("GetAccountData error check "+e);
+
+       //     console.log("Balance", myBalance);
+  
+  
+  // convert the message back to readable JSON
+
+  var theTryte = accountData.transfers[accountData.transfers.length-1][0].signatureMessageFragment
+  while (theTryte.charAt( theTryte.length-1 ) == '9'){
+     theTryte = theTryte.slice(0, -1)       
+  }
+ var theMessage = myIota.utils.fromTrytes(theTryte)
+ var wow = JSON.parse(theMessage);
+  
+  var theTag = accountData.transfers[accountData.transfers.length-1][0].tag
+  while (theTag.charAt( theTag.length-1 ) == '9'){
+     theTag = theTag.slice(0, -1)       
+  }
+  
+document.getElementById('myDiv03').innerHTML = 'Printing getAccountData() balance, tranasfers, addresses<br>'     
+document.getElementById('myDiv03').innerHTML += 'accountData.transfers.length = ' + accountData.transfers.length + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.addresses.length = ' + accountData.addresses.length + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.latestAddress The latest Unused address= '    + accountData.latestAddress + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.balance = '          + accountData.balance + '<br><hr>'
+
+document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].hash =' + accountData.transfers[accountData.transfers.length-1][0].hash + '<br>'
+document.getElementById('myDiv03').innerHTML += 'The Message = ' + theMessage + '<br><br>'
+document.getElementById('myDiv03').innerHTML += 'name = ' + wow.name+'<br>';
+document.getElementById('myDiv03').innerHTML += 'message = ' + wow.message+'<hr>';
+
+document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].value = ' + accountData.transfers[accountData.transfers.length-1][0].value + '<br>'
+document.getElementById('myDiv03').innerHTML += 'accountData.transfers[accountData.transfers.length-1][0].tag = ' + theTag + '<br>'
+
+document.getElementById('myDiv03').innerHTML += 'accountData.balance = ' + accountData.balance + '<br>'
+document.getElementById('myDiv03').innerHTML += 'The Used addresses  accountData.addresses[accountData.addresses.length-1] = ' + accountData.addresses[accountData.addresses.length-1] + '<br>'
+
+
+// Change how the button looks
+document.getElementById('myAccountButton').value = 'getAccountInfo()'
+document.getElementById('myAccountButton').style.backgroundColor  = 'green'
+
+
+
+
+/*
+accountData returns
+
+latestAddress: string
+addresses:  (object)
+transfers:  (list of objects)
+inputs: (object)
+balance:integer value
+
+
+
+
+transfers obejct returns all this keyed information
+
+hash:    signatureMessageFragment:    address:     value:    obsoleteTag:  timestamp:   currentIndex:,
+  lastIndex:,  bundle: trunkTransaction:   branchTransaction:     tag:    attachmentTimestamp: attachmentTimestampLowerBound:   attachmentTimestampUpperBound:
+    nonce:   persistence: 
+    
+    
+
+*/
+
+
+            //console.log("Balance", accountData.balance);
+
+            // Update total balance
+           // updateBalanceHTML(balance);
+        })
+    }
+
+
+
+    
+    
+    function genAddress() {
+
+        console.log("Generating an address");
+
+        // Deterministically Generates a new address with checksum for the specified seed
+        myIota.api.getNewAddress(mySeed, {'checksum': true}, function(e, address) {
+
+             if (!e) {
+
+                console.log("NEW ADDRESS GENERATED: ", address)
+
+                myAddress = address;
+
+            }
+        })
+    }
+
+
+
+
+
+
+
+    //
+    //  Makes a new transfer for the specified seed
+    //  Includes message and value
+    //
+    function mySendTransfer(toAddress, value, messageTrytes) {
+
+        var transfer = [{
+            'address': toAddress,
+            'value': parseInt(value),
+            'message': messageTrytes
+        }]
+
+        console.log("Sending Transfer", transfer);
+
+        // We send the transfer from this seed, with depth 4 and minWeightMagnitude 18
+        myIota.api.sendTransfer(mySeed, 4, 14, transfer, {}, function(e) {
+
+            if (e){
+                
+                    
+                    document.getElementById('myDiv02').innerHTML += 'Error : '+ e + '<br>'
+
+
+            } else {
+
+                    //console.log("I think your message was sent");
+                    //console.log("Need to login as the receive address seed");
+                    //console.log("In order to see it.");
+                    document.getElementById('myDiv02').innerHTML += 'Transfer completed <br>'
+                    // Change how the button looks
+                    document.getElementById('myVerButton').value = 'Transfer'
+                    document.getElementById('myVerButton').style.backgroundColor  = 'green'
+
+            
+               // myBalance = myBalance - value;
+                
+               // console.log("balance"+ myBalance);
+
+            }
+        })
+    }
+
+
+
+function runAll(){
+
+      //  console.log("genAddress() started");
+      //  genAddress()
+       // console.log("");
+      //  console.log("getAccountInfo() started");
+       // getAccountInfo();
+      //  console.log("");
+      //  console.log("mySendTransfer() started");
+        
+       document.getElementById('myDiv02').innerHTML = 'mySendTransfer() started.... <br>'
+
+        var messageToSend = {
+            'name': myName,
+            'message': myMessage
+        }
+
+        try {
+           // console.log("Sending Message: ", messageToSend);
+            document.getElementById('myDiv02').innerHTML += 'Sending name : '+ messageToSend.name +' <br>'
+            document.getElementById('myDiv02').innerHTML += 'Sending Amount : '+ myValue +' <br>'
+            document.getElementById('myDiv02').innerHTML += 'Sending message : '+ messageToSend.message +' <br>'
+            var messageTrytes = myIota.utils.toTrytes(JSON.stringify(messageToSend));
+            //console.log("Converted Message into trytes: ", messageTrytes);
+
+            mySendTransfer(toAddress, myValue, messageTrytes);
+
+        } catch (e) {
+
+            console.log(e);
+
+
+        }
+} 
+  
+  </script>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<h2 align=center>Test online IOTA Transactions</h2>
+
+This website is not an attempt to endorse or discourage IOTA. 
+I simply wanted to see if I could JavaScript program it.<br><br>
+
+Note: This site is as secure as I know how to make it, but
+for your own saftey do not use your main wallet SEED. 
+Use a test seed and then transfer your IOTA from the test using 
+your proper wallet.<br><br>
+  
+Almost all of my information for this site has come from the 
+IOTA github site at<a href="https://github.com/iotaledger/iota.lib.js/">
+https://github.com/iotaledger/iota.lib.js/</a><br><br>
+
+
+Check that the server is up and running at <a href="https://iota.thathost.net/">http://iota.thathost.net/</a><br><br><br>
+
+Recent IOTA version at the top of this file <a href="https://github.com/iotaledger/iota.lib.js/blob/master/package.json"> here</a><br>
+<input  type=button value="Check iota.lib.js Version"    onclick="{
+  document.getElementById('myDiv01').innerHTML = ' Version ' + myIota.version + '<br>'
+
+}"   ><br>
+
+<div id="myDiv01">...</div>
+
+<input  id="mySeedIn" type=text value="ABCDEF9" size=105  onKeyDown = "{
+ 
+  document.getElementById('mySeedIn').value = document.getElementById('mySeedIn').value.replace(/[^a-zA-Z9]/g, ''); // Allowable
+  document.getElementById('mySeedIn').value = document.getElementById('mySeedIn').value.toUpperCase()  // to upper case
+ 
+  var myLength = parseInt(this.value.length) + 1
+  document.getElementById('myDiv01').innerHTML =  'Seed Length = '+ myLength
+ }" onBlur="{
+   document.getElementById('mySeedIn').value = document.getElementById('mySeedIn').value.replace(/[^a-zA-Z9]/g, ''); // Allowable
+   document.getElementById('mySeedIn').value = document.getElementById('mySeedIn').value.toUpperCase()  // to upper case
+ }">
+
+<input type=button value="Hide Seed" onclick="{
+    document.getElementById('mySeedIn').type = 'password'
+    
+}"><br><hr><br><br>
+
+
+A Name to send : <input type=text id="myNameOut" value="" size = 100 placeholder="Fred"><br>
+Other persons address to send IOTA to : <input type=text id="myAddressOut" value="" size = 140  placeholder="ABCDEF9"><br>
+Value IOTA to send : <input type=number id="myValueOut" value="0" size = 10  placeholder="0"><br>
+A Message : <br><textarea id="myMessageOut" ROWS=10 cols=70 WRAP placeholder="Message"></textarea><br>
+
+
+
+
+<br>
+
+<input id="myVerButton" type=button value="Transfer" onclick="{
+  document.getElementById('myVerButton').value = 'Wait for a bit...'
+  document.getElementById('myVerButton').style.backgroundColor  = 'red'
+  
+  myName = document.getElementById('myNameOut').value
+  myMessage = document.getElementById('myMessageOut').value
+  myValue = document.getElementById('myValueOut').value
+  
+  if (document.getElementById('myAddressOut').value != ''){ 
+     toAddress = document.getElementById('myAddressOut').value
+  }
+  
+  
+  
+  mySeed = document.getElementById('mySeedIn').value
+  if (mySeed == ''){
+      alert('Enter a seed')
+  } else {
+     setTimeout('runAll()', 10)   // give the webpage 10 ms to update
+  }
+}"><br>
+
+<div id="myDiv02">...</div><br><br>
+
+
+
+
+
+
+This button retrieves a lot of information:<br>
+<input id="myAccountButton" type=button value="getAccountInfo()" onclick="{
+  document.getElementById('myAccountButton').value = 'Wait for a bit...'
+  document.getElementById('myAccountButton').style.backgroundColor  = 'red'
+
+  mySeed = document.getElementById('mySeedIn').value
+    if (mySeed == ''){
+      alert('Enter a seed')
+     } else {
+  
+      setTimeout('getAccountInfo()', 10)   // give the webpage 10 ms to update
+     }
+}"><br>
+
+<div id="myDiv03">...</div>
+
+
+
+
+
+  
+  
+  
+  
+  

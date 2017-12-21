@@ -46,6 +46,8 @@
 //        'port': 80
 
     var defaultHost = 'https://iota.thathost.net'
+    var myUsdPricePerIota = 0.000004
+    
     var mySeed = ''; // NEVER HARD CODE YOUR SEED ONTO A WEB PAGE!
     var myAddress;    // generated
     var toAddress =  'OQYDLG9KNRLRHJFKIFPA9GGWTICCRTZTIASHTEK9R9UKSSEBAFA99RCCAFKQCKOXCZNKRQZGAYCJLOAJAVMPYATBPX';    // My Generic
@@ -354,6 +356,7 @@ fetch(url2)
  // console.log('Checkout this JSON! ', out2);
    document.getElementById('myDiv00').innerHTML += 'per 1,000,000 IOTA USD $'+ parseFloat(out2.ticker.price).toFixed(2) + '<br>'
 
+   myUsdPricePerIota = parseFloat(out2.ticker.price) / 1000000
 })
 .catch(err => { throw err });
 
@@ -401,7 +404,16 @@ fetch(url2)
 
 A Name to send : <input style = "background-color:Bisque"  type=text id="myNameOut" value="" size = 100 placeholder="Fred"><br>
 Other persons address to send IOTA to : <input style = "background-color:Bisque"  type=text id="myAddressOut" value="" size = 140  placeholder="ABCDEF9"><br>
-Value IOTA to send : <input style = "background-color:Bisque"  type=number id="myValueOut" value="0" size = 10  placeholder="0"><br>
+Value IOTA to send : <input style = "background-color:Bisque"  type=number id="myValueOut" value="0" size = 10  placeholder="0" onchange="{
+
+    var myTempValue = parseInt(document.getElementById('myValueOut').value) * myUsdPricePerIota
+    if (myTempValue <= 0.10){   // really small amounts
+        document.getElementById('myNewPrice').innerHTML = ' <b> $' + myTempValue.toFixed(5) + ' USD </b>'
+    } else {
+        document.getElementById('myNewPrice').innerHTML = ' <b> $' + myTempValue.toFixed(2) + ' USD </b>'
+    }
+}"> <span id="myNewPrice">...</span>
+<br>
 A Message : <br><textarea style = "background-color:Bisque"  id="myMessageOut" ROWS=10 cols=70 WRAP placeholder="Message"></textarea><br>
 
 

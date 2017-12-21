@@ -8,7 +8,7 @@
   "dependencies": {
     "express": "4.14.0",
     "ws": "0.4.32",
-    "iota.lib.js": "0.4.3",
+    "iota.lib.js": "0.4.6",
     "onoff" : "1.1.8"
   }
 }
